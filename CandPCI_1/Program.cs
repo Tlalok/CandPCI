@@ -11,11 +11,15 @@ namespace CandPCI_1
     {
         static void Main(string[] args)
         {
-            //var message = "CRYPTOGRAPHY";
-            //var key = 3;
-            var message = "ЛЕКЦИЯ_ПО_АЛГОРИТМАМ_ШИФРО";
-            var key = 5;
-            Console.WriteLine(new FenceEncoder().Encode(message, key));
+            var message = "CRYPTOGRAPHY";
+            var key = 3;
+            //var message = "ЛЕКЦИЯ_ПО_АЛГОРИТМАМ_ШИФРО";
+            //var key = 5;
+            var encodedMessage = new FenceEncoder().Encode(message, key);
+            var decodedMessage = new FenceEncoder().Decode(encodedMessage, key);
+            Console.WriteLine("Encoded message = {0}", encodedMessage);
+            Console.WriteLine("Decoded message = {0}", decodedMessage);
+
         }
     }
 }
