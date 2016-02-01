@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CandPCI_1.Algorithms
 {
@@ -11,25 +10,13 @@ namespace CandPCI_1.Algorithms
         public string Encode(string message, int key)
         {
             ValidateInputData(message, key);
-
-            var encoder = new Ecoder(message, key);
-            encoder.EncodeFirstString();
-            for (var i = 1; i < key - 1; i++)
-                encoder.EncodeMiddleString(i);
-            encoder.EncodeLastString();
-            return encoder.GetResult();
+            return new Encoder().Encode(message, key);
         }
 
         public string Decode(string message, int key)
         {
             ValidateInputData(message, key);
-
-            var decoder = new Decoder(message, key);
-            decoder.DecodeFirstString();
-            for (var i = 1; i < key - 1; i++)
-                decoder.DecodeMiddleString(i);
-            decoder.DecodeLastString();
-            return decoder.GetResult();
+            return new Decoder().Decode(message, key);
         }
 
         private void ValidateInputData(string message, int key)
@@ -45,122 +32,62 @@ namespace CandPCI_1.Algorithms
             }
         }
 
-
-        private class Ecoder
+        private abstract class FenceTraveller
         {
-            private StringBuilder result;
-
-            public string Message { get; private set; }
-            public int Key { get; private set; }
-
-            public Ecoder(string message, int key)
+            protected void Travel(string message, int key)
             {
-                this.Message = message;
-                this.Key = key;
-                result = new StringBuilder(message.Length);
+                for (var i = 0; i < key; i++)
+                {
+                    var firstStep = 2 * (key - i - 1);
+                    var secondStep = 2 * (key - 1) - firstStep;
+                    firstStep = firstStep == 0 ? secondStep : firstStep;
+                    secondStep = secondStep == 0 ? firstStep : secondStep;
+                    bool first = false;
+                    Func<int> nextStep = () => (first = !first) ? firstStep : secondStep;
+
+                    for (var j = i; j < message.Length; j += nextStep())
+                        ElementAction(j, message);
+                }
             }
 
-            public void EncodeFirstString()
+            protected abstract void ElementAction(int index, string message);
+        }
+
+        private class Encoder : FenceTraveller
+        {
+            private StringBuilder encodedMessage;
+            private int currentPosition;
+
+            public string Encode(string message, int key)
             {
-                EncodeFirstOrLastString(true);
+                encodedMessage = new StringBuilder(new string(' ', message.Length));
+                currentPosition = 0;
+                Travel(message, key);
+                return encodedMessage.ToString();
             }
 
-            public void EncodeLastString()
+            protected override void ElementAction(int index, string message)
             {
-                EncodeFirstOrLastString(false);
-            }
-
-            private void EncodeFirstOrLastString(bool first)
-            {
-                var start = first ? 0 : Key - 1;
-                var step = 2 * (Key - 1);
-
-                for (var i = start; i < Message.Length; i += step)
-                    result.Append(Message[i]);
-            }
-
-            public void EncodeMiddleString(int rowIndex)
-            {
-                var firstStep = 2 * (Key - rowIndex - 1);
-                var secondStep = 2 * (Key - 1) - firstStep;
-                //firstStep = firstStep == 0 ? secondStep : firstStep;
-                //secondStep = secondStep == 0 ? firstStep : secondStep;
-                bool first = false;
-                Func<int> nextStep = () => (first = !first) ? firstStep : secondStep;
-
-                for (var i = rowIndex; i < Message.Length; i += nextStep())
-                    result.Append(Message[i]);
-            }
-
-            public string GetResult()
-            {
-                return result.ToString();
-            }
-
-            public void Clear()
-            {
-                result = new StringBuilder(Message.Length);
+ 	            encodedMessage[currentPosition++] = message[index];
             }
         }
 
-        private class Decoder
+        private class Decoder : FenceTraveller
         {
-            private StringBuilder result;
-            private CharEnumerator messageEnumerator;
+            private StringBuilder decodedMessage;
+            private int currentPosition;
 
-            public string Message { get; private set; }
-            public int Key { get; private set; }
-
-            public Decoder(string message, int key)
+            public string Decode(string message, int key)
             {
-                this.Message = message;
-                this.Key = key;
-
-                result = new StringBuilder(new string(' ', message.Length));
-                messageEnumerator = message.GetEnumerator();
-                messageEnumerator.MoveNext();
+                decodedMessage = new StringBuilder(new string(' ', message.Length));
+                currentPosition = 0;
+                Travel(message, key);
+                return decodedMessage.ToString();
             }
 
-            public void DecodeFirstString()
+            protected override void ElementAction(int index, string message)
             {
-                DecodeFirstOrLastString(true);
-            }
-
-            public void DecodeLastString()
-            {
-                DecodeFirstOrLastString(false);
-            }
-
-            private void DecodeFirstOrLastString(bool first)
-            {
-                var start = first ? 0 : Key - 1;
-                var step = 2 * (Key - 1);
-
-                for (var i = start; i < result.Length; i += step, messageEnumerator.MoveNext())
-                    result[i] = messageEnumerator.Current;
-            }
-
-            public void DecodeMiddleString(int rowIndex)
-            {
-                var firstStep = 2 * (Key - rowIndex - 1);
-                var secondStep = 2 * (Key - 1) - firstStep;
-                bool first = false;
-                Func<int> nextStep = () => (first = !first) ? firstStep : secondStep;
-
-                for (var i = rowIndex; i < result.Length; i += nextStep(), messageEnumerator.MoveNext())
-                    result[i] = messageEnumerator.Current;
-            }
-
-            public string GetResult()
-            {
-                return result.ToString();
-            }
-
-            public void Clear()
-            {
-                result = new StringBuilder(new string(' ', Message.Length));
-                messageEnumerator = Message.GetEnumerator();
-                messageEnumerator.MoveNext();
+ 	            decodedMessage[index] = message[currentPosition++];
             }
         }
 

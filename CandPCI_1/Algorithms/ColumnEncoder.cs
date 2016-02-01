@@ -45,11 +45,11 @@ namespace CandPCI_1.Algorithms
             return new char[] { ' ', '_', '.', ',', '!', '?', ':', '-' };
         }
 
-        private abstract class ColumnTravaler
+        private abstract class ColumnTravaller
         {
             private char[] alphabet;
 
-            public ColumnTravaler(char[] alphabet)
+            public ColumnTravaller(char[] alphabet)
             {
                 this.alphabet = new char[alphabet.Length];
                 Array.Copy(alphabet, this.alphabet, alphabet.Length);
@@ -76,7 +76,7 @@ namespace CandPCI_1.Algorithms
             protected abstract void ElementAction(int index, string message);
         }
 
-        private class Encoder : ColumnTravaler
+        private class Encoder : ColumnTravaller
         {
             private StringBuilder encodedMessage;
             private int currentPosition;
@@ -97,7 +97,7 @@ namespace CandPCI_1.Algorithms
             }
         }
 
-        private class Decoder : ColumnTravaler
+        private class Decoder : ColumnTravaller
         {
             private StringBuilder decodedMessage;
             private int currentPosition;
