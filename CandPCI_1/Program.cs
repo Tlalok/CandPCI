@@ -12,8 +12,18 @@ namespace CandPCI_1
         static void Main(string[] args)
         {
 
-            TestColumn();
+            TestCaesar();
 
+        }
+
+        private static void TestCaesar()
+        {
+            var message = "ЭТОЛАБОРАТОРНАЯРАБОТАПОКИОКИ";
+            var key = 25;
+            var encodedMessage = new CaesarEncoder().Encode(message, key);
+            var decodedMessage = new CaesarEncoder().Decode(encodedMessage, key);
+            Console.WriteLine("Encoded message = {0}", encodedMessage);
+            Console.WriteLine("Decoded message = {0}", decodedMessage);
         }
 
         private static void TestColumn()
