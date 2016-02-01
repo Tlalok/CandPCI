@@ -7,16 +7,16 @@ namespace CandPCI_1.Algorithms
 {
     class RailFenceCipher
     {
-        public string Encode(string message, int key)
+        public string Encrypt(string message, int key)
         {
             ValidateInputData(message, key);
-            return new Encoder().Encode(message, key);
+            return new Encrypter().Encrypt(message, key);
         }
 
-        public string Decode(string message, int key)
+        public string Decrypt(string message, int key)
         {
             ValidateInputData(message, key);
-            return new Decoder().Decode(message, key);
+            return new Decrypter().Decrypt(message, key);
         }
 
         private void ValidateInputData(string message, int key)
@@ -53,12 +53,12 @@ namespace CandPCI_1.Algorithms
             protected abstract void ElementAction(int index, string message);
         }
 
-        private class Encoder : RailFenceTraveller
+        private class Encrypter : RailFenceTraveller
         {
             private StringBuilder encodedMessage;
             private int currentPosition;
 
-            public string Encode(string message, int key)
+            public string Encrypt(string message, int key)
             {
                 encodedMessage = new StringBuilder(new string(' ', message.Length));
                 currentPosition = 0;
@@ -72,12 +72,12 @@ namespace CandPCI_1.Algorithms
             }
         }
 
-        private class Decoder : RailFenceTraveller
+        private class Decrypter : RailFenceTraveller
         {
             private StringBuilder decodedMessage;
             private int currentPosition;
 
-            public string Decode(string message, int key)
+            public string Decrypt(string message, int key)
             {
                 decodedMessage = new StringBuilder(new string(' ', message.Length));
                 currentPosition = 0;

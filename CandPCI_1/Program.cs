@@ -20,8 +20,8 @@ namespace CandPCI_1
         {
             var message = "ЭТОЛАБОРАТОРНАЯРАБОТАПОКИОКИ";
             var key = 25;
-            var encodedMessage = new CaesarCipher().Encode(message, key);
-            var decodedMessage = new CaesarCipher().Decode(encodedMessage, key);
+            var encodedMessage = new CaesarCipher().Encrypt(message, key);
+            var decodedMessage = new CaesarCipher().Decrypt(encodedMessage, key);
             Console.WriteLine("Encoded message = {0}", encodedMessage);
             Console.WriteLine("Decoded message = {0}", decodedMessage);
         }
@@ -32,8 +32,8 @@ namespace CandPCI_1
             var key = "КРИПТОГРАФИЯ";
             //var message = "ЛЕКЦИЯ_ПО_АЛГОРИТМАМ_ШИФРО";
             //var key = 5;
-            var encodedMessage = new ColumnarTranspositionCipher().Encode(message, key);
-            var decodedMessage = new ColumnarTranspositionCipher().Decode(encodedMessage, key);
+            var encodedMessage = new ColumnarTranspositionCipher().Encrypt(message, key);
+            var decodedMessage = new ColumnarTranspositionCipher().Decrypt(encodedMessage, key);
             Console.WriteLine("Encoded message = {0}", encodedMessage);
             Console.WriteLine("Decoded message = {0}", decodedMessage);
         }
@@ -44,8 +44,8 @@ namespace CandPCI_1
             //var key = 3;
             var message = "ЛЕКЦИЯ_ПО_АЛГОРИТМАМ_ШИФРО";
             var key = 5;
-            var encodedMessage = new RailFenceCipher().Encode(message, key);
-            var decodedMessage = new RailFenceCipher().Decode(encodedMessage, key);
+            var encodedMessage = new RailFenceCipher().Encrypt(message, key);
+            var decodedMessage = new RailFenceCipher().Decrypt(encodedMessage, key);
             Console.WriteLine("Encoded message = {0}", encodedMessage);
             Console.WriteLine("Decoded message = {0}", decodedMessage);
         }

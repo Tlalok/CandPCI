@@ -12,37 +12,46 @@ namespace CandPCI_1.Algorithms
 
         public ColumnarTranspositionCipher()
         {
-            alphabet = GetEnglishAlphabet()
-                .Concat(GetRussianAlphabet())
-                .Concat(GetSymbols())
+            alphabet = EnglishAlphabet
+                .Concat(RussianAlphabet)
+                .Concat(PunctuationMarks)
                 .ToArray();
         }
 
-        public string Encode(string message, string key)
+        public string Encrypt(string message, string key)
         {
             message = message.ToUpper();
-            return new Encoder(alphabet).Encode(message, key);
+            return new Encrypter(alphabet).Encrypt(message, key);
         }
 
-        public string Decode(string message, string key)
+        public string Decrypt(string message, string key)
         {
             message = message.ToUpper();
-            return new Decoder(alphabet).Decode(message, key);
+            return new Decrypter(alphabet).Decrypt(message, key);
         }
 
-        private char[] GetEnglishAlphabet()
+        private char[] EnglishAlphabet
         {
-            return Enumerable.Range('A', 26).Select(x => (char)x).ToArray();
+            get
+            {
+                return Enumerable.Range('A', 26).Select(x => (char)x).ToArray();
+            }
         }
 
-        private char[] GetRussianAlphabet()
+        private char[] RussianAlphabet
         {
-            return Enumerable.Range('А', 32).Select(x => (char)x).ToArray();
+            get
+            {
+                return Enumerable.Range('А', 32).Select(x => (char)x).ToArray();
+            }
         }
 
-        private char[] GetSymbols()
+        private char[] PunctuationMarks
         {
-            return new char[] { ' ', '_', '.', ',', '!', '?', ':', '-' };
+            get
+            {
+                return new char[] { ' ', '_', '.', ',', '!', '?', ':', '-' };
+            }
         }
 
         private abstract class ColumnTranspositionTravaller
@@ -76,14 +85,14 @@ namespace CandPCI_1.Algorithms
             protected abstract void ElementAction(int index, string message);
         }
 
-        private class Encoder : ColumnTranspositionTravaller
+        private class Encrypter : ColumnTranspositionTravaller
         {
             private StringBuilder encodedMessage;
             private int currentPosition;
 
-            public Encoder(char[] alphabet) : base(alphabet) { }
+            public Encrypter(char[] alphabet) : base(alphabet) { }
 
-            public string Encode(string message, string key)
+            public string Encrypt(string message, string key)
             {
                 encodedMessage = new StringBuilder(new string(' ', message.Length));
                 currentPosition = 0;
@@ -97,14 +106,14 @@ namespace CandPCI_1.Algorithms
             }
         }
 
-        private class Decoder : ColumnTranspositionTravaller
+        private class Decrypter : ColumnTranspositionTravaller
         {
             private StringBuilder decodedMessage;
             private int currentPosition;
 
-            public Decoder(char[] alphabet) : base(alphabet) { }
+            public Decrypter(char[] alphabet) : base(alphabet) { }
 
-            public string Decode(string message, string key)
+            public string Decrypt(string message, string key)
             {
                 decodedMessage = new StringBuilder(new string(' ', message.Length));
                 currentPosition = 0;

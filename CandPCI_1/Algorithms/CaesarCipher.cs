@@ -12,13 +12,13 @@ namespace CandPCI_1.Algorithms
 
         public CaesarCipher()
         {
-            alphabet = GetEnglishAlphabet()
-                .Concat(GetRussianAlphabet())
-                .Concat(GetSymbols())
+            alphabet = EnglishAlphabet
+                .Concat(RussianAlphabet)
+                .Concat(PunctuationMarks)
                 .ToArray();
         }
 
-        public string Encode(string message, int key)
+        public string Encrypt(string message, int key)
         {
             message = message.ToUpper();
             return new string(message
@@ -26,7 +26,7 @@ namespace CandPCI_1.Algorithms
                 .ToArray());
         }
 
-        public string Decode(string message, int key)
+        public string Decrypt(string message, int key)
         {
             message = message.ToUpper();
             return new string(message
@@ -57,19 +57,28 @@ namespace CandPCI_1.Algorithms
             return result;
         }
 
-        private char[] GetEnglishAlphabet()
+        private char[] EnglishAlphabet
         {
-            return Enumerable.Range('A', 26).Select(x => (char)x).ToArray();
+            get
+            {
+                return Enumerable.Range('A', 26).Select(x => (char)x).ToArray();
+            }
         }
 
-        private char[] GetRussianAlphabet()
+        private char[] RussianAlphabet
         {
-            return Enumerable.Range('А', 32).Select(x => (char)x).ToArray();
+            get
+            {
+                return Enumerable.Range('А', 32).Select(x => (char)x).ToArray();
+            }
         }
 
-        private char[] GetSymbols()
+        private char[] PunctuationMarks
         {
-            return new char[] { ' ', '_', '.', ',', '!', '?', ':', '-' };
+            get
+            {
+                return new char[] { ' ', '_', '.', ',', '!', '?', ':', '-' };
+            }
         }
     }
 }
