@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CandPCI_1.Algorithms
 {
-    class ColumnEncoder
+    class ColumnarTranspositionCipher
     {
         private char[] alphabet;
 
-        public ColumnEncoder()
+        public ColumnarTranspositionCipher()
         {
             alphabet = GetEnglishAlphabet()
                 .Concat(GetRussianAlphabet())
@@ -45,11 +45,11 @@ namespace CandPCI_1.Algorithms
             return new char[] { ' ', '_', '.', ',', '!', '?', ':', '-' };
         }
 
-        private abstract class ColumnTravaller
+        private abstract class ColumnTranspositionTravaller
         {
             private char[] alphabet;
 
-            public ColumnTravaller(char[] alphabet)
+            public ColumnTranspositionTravaller(char[] alphabet)
             {
                 this.alphabet = new char[alphabet.Length];
                 Array.Copy(alphabet, this.alphabet, alphabet.Length);
@@ -76,7 +76,7 @@ namespace CandPCI_1.Algorithms
             protected abstract void ElementAction(int index, string message);
         }
 
-        private class Encoder : ColumnTravaller
+        private class Encoder : ColumnTranspositionTravaller
         {
             private StringBuilder encodedMessage;
             private int currentPosition;
@@ -97,7 +97,7 @@ namespace CandPCI_1.Algorithms
             }
         }
 
-        private class Decoder : ColumnTravaller
+        private class Decoder : ColumnTranspositionTravaller
         {
             private StringBuilder decodedMessage;
             private int currentPosition;

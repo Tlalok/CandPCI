@@ -41,9 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\CaesarEncoder.cs" />
-    <Compile Include="Algorithms\ColumnEncoder.cs" />
-    <Compile Include="Algorithms\FenceEncoder.cs" />
+    <Compile Include="Algorithms\CaesarCipher.cs" />
+    <Compile Include="Algorithms\ColumnarTranspositionCipher.cs" />
+    <Compile Include="Algorithms\RailFenceCipher.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

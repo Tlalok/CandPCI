@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CandPCI_1.Algorithms
 {
-    class FenceEncoder
+    class RailFenceCipher
     {
         public string Encode(string message, int key)
         {
@@ -32,7 +32,7 @@ namespace CandPCI_1.Algorithms
             }
         }
 
-        private abstract class FenceTraveller
+        private abstract class RailFenceTraveller
         {
             protected void Travel(string message, int key)
             {
@@ -53,7 +53,7 @@ namespace CandPCI_1.Algorithms
             protected abstract void ElementAction(int index, string message);
         }
 
-        private class Encoder : FenceTraveller
+        private class Encoder : RailFenceTraveller
         {
             private StringBuilder encodedMessage;
             private int currentPosition;
@@ -72,7 +72,7 @@ namespace CandPCI_1.Algorithms
             }
         }
 
-        private class Decoder : FenceTraveller
+        private class Decoder : RailFenceTraveller
         {
             private StringBuilder decodedMessage;
             private int currentPosition;

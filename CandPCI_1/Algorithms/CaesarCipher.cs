@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CandPCI_1.Algorithms
 {
-    class CaesarEncoder
+    class CaesarCipher
     {
         private char[] alphabet;
 
-        public CaesarEncoder()
+        public CaesarCipher()
         {
             alphabet = GetEnglishAlphabet()
                 .Concat(GetRussianAlphabet())
