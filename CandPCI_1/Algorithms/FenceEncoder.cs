@@ -10,97 +10,158 @@ namespace CandPCI_1.Algorithms
     {
         public string Encode(string message, int key)
         {
-            if (key < 2)
-                throw new ArgumentException();
-            
-            var encodedMessage = String.Empty;
-            encodedMessage += EncodeFirstString(message, key);
+            ValidateInputData(message, key);
+
+            var encoder = new Ecoder(message, key);
+            encoder.EncodeFirstString();
             for (var i = 1; i < key - 1; i++)
-                encodedMessage += EncodeMiddleString(message, key, i);
-            encodedMessage += EncodeLastString(message, key);
-            return encodedMessage;
-        }
-
-        private string EncodeFirstString(string message, int key)
-        {
-            return EncodeFirstOrLastString(message, key, true);
-        }
-
-        private string EncodeLastString(string message, int key)
-        {
-            return EncodeFirstOrLastString(message, key, false);
-        }
-
-        private string EncodeFirstOrLastString(string message, int key, bool first)
-        {
-            var start = first ? 0 : key - 1;
-            var result = new StringBuilder();
-            var step = 2 * (key - 1);
-
-            for (var i = start; i < message.Length; i += step)
-                result.Append(message[i]);
-
-            return result.ToString();
-        }
-
-        private string EncodeMiddleString(string message, int key, int rowIndex)
-        {
-            var result = new StringBuilder();
-            var firstStep = 2 * (key - rowIndex - 1);
-            var secondStep = 2 * (key - 1) - firstStep;
-            bool first = false;
-            Func<int> nextStep = () => (first = !first) ? firstStep : secondStep;
-
-            for (var i = rowIndex; i < message.Length; i += nextStep())
-                result.Append(message[i]);
-
-            return result.ToString();
+                encoder.EncodeMiddleString(i);
+            encoder.EncodeLastString();
+            return encoder.GetResult();
         }
 
         public string Decode(string message, int key)
         {
-            //var decodedMessage = new StringBuilder(message.Length);
-            var decodedMessage = new StringBuilder(new string(' ', message.Length));
-            var messageEnumerator = message.GetEnumerator();
-            messageEnumerator.MoveNext();
+            ValidateInputData(message, key);
 
-            DecodeFirstString(messageEnumerator, key, decodedMessage);
+            var decoder = new Decoder(message, key);
+            decoder.DecodeFirstString();
             for (var i = 1; i < key - 1; i++)
-                DecodeMiddleString(messageEnumerator, key, decodedMessage, i);
-            DecodeLastString(messageEnumerator, key, decodedMessage);
-            return decodedMessage.ToString();
+                decoder.DecodeMiddleString(i);
+            decoder.DecodeLastString();
+            return decoder.GetResult();
         }
 
-        private void DecodeFirstString(CharEnumerator message, int key, StringBuilder result)
+        private void ValidateInputData(string message, int key)
         {
-            DecodeFirstOrLastString(message, key, result, true);
+            if (key >= message.Length)
+            {
+                throw new ArgumentException("Ключ слишком велик для данного текста");
+            }
+
+            if (key < 2)
+            {
+                throw new ArgumentException("Ключ - натуральное число, большее, чем 1");
+            }
         }
 
-        private void DecodeLastString(CharEnumerator message, int key, StringBuilder result)
+
+        private class Ecoder
         {
-            DecodeFirstOrLastString(message, key, result, false);
+            private StringBuilder result;
+
+            public string Message { get; private set; }
+            public int Key { get; private set; }
+
+            public Ecoder(string message, int key)
+            {
+                this.Message = message;
+                this.Key = key;
+                result = new StringBuilder(message.Length);
+            }
+
+            public void EncodeFirstString()
+            {
+                EncodeFirstOrLastString(true);
+            }
+
+            public void EncodeLastString()
+            {
+                EncodeFirstOrLastString(false);
+            }
+
+            private void EncodeFirstOrLastString(bool first)
+            {
+                var start = first ? 0 : Key - 1;
+                var step = 2 * (Key - 1);
+
+                for (var i = start; i < Message.Length; i += step)
+                    result.Append(Message[i]);
+            }
+
+            public void EncodeMiddleString(int rowIndex)
+            {
+                var firstStep = 2 * (Key - rowIndex - 1);
+                var secondStep = 2 * (Key - 1) - firstStep;
+                //firstStep = firstStep == 0 ? secondStep : firstStep;
+                //secondStep = secondStep == 0 ? firstStep : secondStep;
+                bool first = false;
+                Func<int> nextStep = () => (first = !first) ? firstStep : secondStep;
+
+                for (var i = rowIndex; i < Message.Length; i += nextStep())
+                    result.Append(Message[i]);
+            }
+
+            public string GetResult()
+            {
+                return result.ToString();
+            }
+
+            public void Clear()
+            {
+                result = new StringBuilder(Message.Length);
+            }
         }
 
-        private string DecodeFirstOrLastString(CharEnumerator message, int key, StringBuilder result, bool first)
+        private class Decoder
         {
-            var start = first ? 0 : key - 1;
-            var step = 2 * (key - 1);
+            private StringBuilder result;
+            private CharEnumerator messageEnumerator;
 
-            for (var i = start; i < result.Length; i += step, message.MoveNext())
-                result[i] = message.Current;
+            public string Message { get; private set; }
+            public int Key { get; private set; }
 
-            return result.ToString();
-        }
+            public Decoder(string message, int key)
+            {
+                this.Message = message;
+                this.Key = key;
 
-        private void DecodeMiddleString(CharEnumerator message, int key, StringBuilder result, int rowIndex)
-        {
-            var firstStep = 2 * (key - rowIndex - 1);
-            var secondStep = 2 * (key - 1) - firstStep;
-            bool first = false;
-            Func<int> nextStep = () => (first = !first) ? firstStep : secondStep;
+                result = new StringBuilder(new string(' ', message.Length));
+                messageEnumerator = message.GetEnumerator();
+                messageEnumerator.MoveNext();
+            }
 
-            for (var i = rowIndex; i < result.Length; i += nextStep(), message.MoveNext())
-                result[i] = message.Current;
+            public void DecodeFirstString()
+            {
+                DecodeFirstOrLastString(true);
+            }
+
+            public void DecodeLastString()
+            {
+                DecodeFirstOrLastString(false);
+            }
+
+            private void DecodeFirstOrLastString(bool first)
+            {
+                var start = first ? 0 : Key - 1;
+                var step = 2 * (Key - 1);
+
+                for (var i = start; i < result.Length; i += step, messageEnumerator.MoveNext())
+                    result[i] = messageEnumerator.Current;
+            }
+
+            public void DecodeMiddleString(int rowIndex)
+            {
+                var firstStep = 2 * (Key - rowIndex - 1);
+                var secondStep = 2 * (Key - 1) - firstStep;
+                bool first = false;
+                Func<int> nextStep = () => (first = !first) ? firstStep : secondStep;
+
+                for (var i = rowIndex; i < result.Length; i += nextStep(), messageEnumerator.MoveNext())
+                    result[i] = messageEnumerator.Current;
+            }
+
+            public string GetResult()
+            {
+                return result.ToString();
+            }
+
+            public void Clear()
+            {
+                result = new StringBuilder(new string(' ', Message.Length));
+                messageEnumerator = Message.GetEnumerator();
+                messageEnumerator.MoveNext();
+            }
         }
 
     }
