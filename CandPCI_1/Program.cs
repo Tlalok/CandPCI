@@ -12,7 +12,8 @@ namespace CandPCI_1
         static void Main(string[] args)
         {
             //TestFence();
-            TestCaesar();
+            //TestCaesar();
+            TestCardan();
 
             //TestColumn();
 
@@ -49,6 +50,33 @@ namespace CandPCI_1
             var key = 5;
             var encodedMessage = new RailFenceCipher().Encrypt(message, key);
             var decodedMessage = new RailFenceCipher().Decrypt(encodedMessage, key);
+            Console.WriteLine("Encoded message = {0}", encodedMessage);
+            Console.WriteLine("Decoded message = {0}", decodedMessage);
+        }
+
+        private static void TestCardan()
+        {
+            //var message = "CRYPTOGRAPHY";
+            //var key = 3;
+            var message = "ЭТОЛЕКЦИЯПОКРИПТОГРАФИИ";
+            var key = new CardanGrilleKey() 
+            { 
+                MatrixOrder = 4,
+                Positions = new Position[]  
+                { 
+                    //new Position(1, 1),
+                    //new Position(2, 4),
+                    //new Position(3, 3),
+                    //new Position(4, 2)
+                    new Position(0, 0),
+                    new Position(1, 3),
+                    new Position(2, 2),
+                    new Position(3, 1)
+                    
+                }
+            };
+            var encodedMessage = new CardanGrilleCipher().Encrypt(message, key);
+            var decodedMessage = new CardanGrilleCipher().Decrypt(encodedMessage, key);
             Console.WriteLine("Encoded message = {0}", encodedMessage);
             Console.WriteLine("Decoded message = {0}", decodedMessage);
         }

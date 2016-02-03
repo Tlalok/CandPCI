@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Algorithms\AffineCipher.cs" />
     <Compile Include="Algorithms\CaesarCipher.cs" />
+    <Compile Include="Algorithms\CardanGrilleCipher.cs" />
     <Compile Include="Algorithms\ColumnarTranspositionCipher.cs" />
     <Compile Include="Algorithms\RailFenceCipher.cs" />
     <Compile Include="Program.cs" />
