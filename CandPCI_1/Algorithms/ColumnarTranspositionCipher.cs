@@ -89,6 +89,8 @@ namespace CandPCI_1.Algorithms
         {
             private StringBuilder encodedMessage;
             private int currentPosition;
+            private int nextStartPosition;
+            private int keyLength;
 
             public Encrypter(char[] alphabet) : base(alphabet) { }
 
@@ -96,13 +98,19 @@ namespace CandPCI_1.Algorithms
             {
                 encodedMessage = new StringBuilder(new string(' ', message.Length));
                 currentPosition = 0;
+                nextStartPosition = 1;
+                keyLength = key.Length;
                 Travel(message, key);
                 return encodedMessage.ToString();
             }
 
             protected override void ElementAction(int index, string message)
             {
-                encodedMessage[currentPosition++] = message[index];
+                //encodedMessage[currentPosition++] = message[index];
+                encodedMessage[currentPosition] = message[index];
+                currentPosition += keyLength;
+                if (currentPosition >= message.Length)
+                    currentPosition = nextStartPosition++;
             }
         }
 
@@ -110,6 +118,8 @@ namespace CandPCI_1.Algorithms
         {
             private StringBuilder decodedMessage;
             private int currentPosition;
+            private int nextStartPosition;
+            private int keyLength;
 
             public Decrypter(char[] alphabet) : base(alphabet) { }
 
@@ -117,14 +127,21 @@ namespace CandPCI_1.Algorithms
             {
                 decodedMessage = new StringBuilder(new string(' ', message.Length));
                 currentPosition = 0;
+                nextStartPosition = 1;
+                keyLength = key.Length;
                 Travel(message, key);
                 return decodedMessage.ToString();
             }
 
             protected override void ElementAction(int index, string message)
             {
-                decodedMessage[index] = message[currentPosition++];
+                //decodedMessage[index] = message[currentPosition++];
+                decodedMessage[index] = message[currentPosition];
+                currentPosition += keyLength;
+                if (currentPosition >= message.Length)
+                    currentPosition = nextStartPosition++;
             }
         }
     }
 }
+

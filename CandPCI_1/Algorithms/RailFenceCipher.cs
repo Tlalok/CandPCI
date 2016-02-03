@@ -39,7 +39,7 @@ namespace CandPCI_1.Algorithms
                 for (var i = 0; i < key; i++)
                 {
                     var firstStep = 2 * (key - i - 1);
-                    var secondStep = 2 * (key - 1) - firstStep;
+                    var secondStep = 2 * i;
                     firstStep = firstStep == 0 ? secondStep : firstStep;
                     secondStep = secondStep == 0 ? firstStep : secondStep;
                     bool first = false;

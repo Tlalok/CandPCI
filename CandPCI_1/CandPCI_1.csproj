@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\AffineCipher.cs" />
     <Compile Include="Algorithms\CaesarCipher.cs" />
     <Compile Include="Algorithms\ColumnarTranspositionCipher.cs" />
     <Compile Include="Algorithms\RailFenceCipher.cs" />

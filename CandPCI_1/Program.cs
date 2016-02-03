@@ -11,29 +11,32 @@ namespace CandPCI_1
     {
         static void Main(string[] args)
         {
-            TestFence();
-            //TestCaesar();
+            //TestFence();
+            TestCaesar();
+
+            //TestColumn();
 
         }
 
         private static void TestCaesar()
         {
             var message = "ЭТОЛАБОРАТОРНАЯРАБОТАПОКИОКИ";
-            var key = 25;
+            var key = 3;
+            var key2 = 5;
             var encodedMessage = new CaesarCipher().Encrypt(message, key);
-            var decodedMessage = new CaesarCipher().Decrypt(encodedMessage, key);
+            var decodedMessage = new CaesarCipher().Decrypt(encodedMessage, key2);
             Console.WriteLine("Encoded message = {0}", encodedMessage);
             Console.WriteLine("Decoded message = {0}", decodedMessage);
         }
 
         private static void TestColumn()
         {
-            var message = "ЭТОЛАБОРАТОРНАЯРАБОТАПОКИОКИ";
+            //var message = "ЭТОЛАБОРАТОРНАЯРАБОТАПОКИОКИ";
+            var message = "ЭТО–_ЛЕКЦИЯ_ПО_АЛГОРИТМАМ_ШИФРОВАНИЯ";
             var key = "КРИПТОГРАФИЯ";
-            //var message = "ЛЕКЦИЯ_ПО_АЛГОРИТМАМ_ШИФРО";
-            //var key = 5;
+            var key2 = "КОИПТОГРАФИЯ";
             var encodedMessage = new ColumnarTranspositionCipher().Encrypt(message, key);
-            var decodedMessage = new ColumnarTranspositionCipher().Decrypt(encodedMessage, key);
+            var decodedMessage = new ColumnarTranspositionCipher().Decrypt(encodedMessage, key2);
             Console.WriteLine("Encoded message = {0}", encodedMessage);
             Console.WriteLine("Decoded message = {0}", decodedMessage);
         }
