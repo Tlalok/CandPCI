@@ -50,7 +50,7 @@ namespace CandPCI_1.Algorithms
         {
             get
             {
-                return new char[] { ' ', '_', '.', ',', '!', '?', ':', '-' };
+                return new char[] { ' ', '_', '.', ',', '!', '?', ':', '-', ';' };
             }
         }
 

@@ -98,6 +98,11 @@ namespace CandPCI_1.Algorithms
                     int additionalColumn = j >= halfOrder ? 1 : 0;
                     index -= additionalRow * order + additionalColumn;
                 }
+                else
+                {
+                    if ((i == halfOrder && j >= halfOrder) || i > halfOrder)
+                        index--;
+                }
                 return index;
             }
 
@@ -188,7 +193,6 @@ namespace CandPCI_1.Algorithms
             public string Encrypt(string message, CardanGrilleKey key)
             {
                 matrixSize = (key.MatrixOrder * key.MatrixOrder) / 4 * 4;
-                //encryptMessage = new TableMessage(new string('_', message.Length), key.MatrixOrder);
                 var additionalTable = message.Length % matrixSize == 0 ? 0 : 1;
                 var encryptMessageSize = (message.Length / matrixSize + additionalTable) * matrixSize;
                 encryptMessage = new TableMessage(new string('_', encryptMessageSize), key.MatrixOrder);
@@ -221,7 +225,7 @@ namespace CandPCI_1.Algorithms
                 matrixSize = (key.MatrixOrder * key.MatrixOrder) / 4 * 4;
                 messagePosition = 0;
                 Travel(message, key);
-                return decryptMessage.ToString();
+                return decryptMessage.ToString().TrimEnd('_');
             }
 
             protected override void ElementAction(Position tablePosition)
