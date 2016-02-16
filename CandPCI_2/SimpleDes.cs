@@ -34,10 +34,14 @@ namespace CandPCI_2
         {
             var encryptedBlocks = new byte[blocks.Length];
             var keys = new KeyGenerator().GetKeys(key);
-            for (var i = 0; i < blocks.Length; i++)
+            Parallel.For(0, blocks.Length, i =>
             {
                 encryptedBlocks[i] = ProcessBlock(blocks[i], keys);
-            }
+            });
+            //for (var i = 0; i < blocks.Length; i++)
+            //{
+            //    encryptedBlocks[i] = ProcessBlock(blocks[i], keys);
+            //}
             return encryptedBlocks;
         }
 
@@ -45,10 +49,14 @@ namespace CandPCI_2
         {
             var decryptedBlocks = new byte[blocks.Length];
             var keys = new KeyGenerator().GetKeys(key).Reverse().ToArray();
-            for (var i = 0; i < blocks.Length; i++)
+            Parallel.For(0, blocks.Length, i =>
             {
                 decryptedBlocks[i] = ProcessBlock(blocks[i], keys);
-            }
+            });
+            //for (var i = 0; i < blocks.Length; i++)
+            //{
+            //    decryptedBlocks[i] = ProcessBlock(blocks[i], keys);
+            //}
             return decryptedBlocks;
         }
 
