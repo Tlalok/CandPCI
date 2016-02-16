@@ -57,6 +57,11 @@ namespace CandPCI_1.Algorithms
 
         private void ValidateKey(int key1)
         {
+            if (key1 == 0)
+            {
+                throw new ArgumentException("Invalid key1. It must not be 0");
+            }
+
             var inverseKey1 = Inverse(key1, alphabet.Length);
             if (inverseKey1 == 0)
             {

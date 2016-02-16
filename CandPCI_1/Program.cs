@@ -13,9 +13,11 @@ namespace CandPCI_1
         {
             //TestFence();
             //TestCaesar();
-            //TestCardan();
+            
 
             //TestColumn();
+
+            //TestCardan();
 
             TestAffine();
         }
@@ -119,11 +121,6 @@ namespace CandPCI_1
         {
             var message = "ЭТОЛЕКЦИЯПОКРИПТОГРАФИИ";
             var key = 5;
-            //var message = "ЭТОЛЕКЦИЯПОКРИПТОГРАФИИ";
-            //var key = Key4();
-            //var message = "ЭТОЛЕК ЦИЯПОК РИПТОГ РАФИИ1";
-            //var message = "ЭТОЛЕКЦИЯПОКРИПТОГРАФИИ1";
-            //var key = Key5();
             var encryptedMessage = new AffineCipher().Encrypt(message, key);
             var decryptedMessage = new AffineCipher().Decrypt(encryptedMessage, key);
             Console.WriteLine("Encoded message = {0}", encryptedMessage);
