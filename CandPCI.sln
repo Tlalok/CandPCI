@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CandPCI_1", "CandPCI_1\Cand
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CandPCI_2", "CandPCI_2\CandPCI_2.csproj", "{5E7686E5-BBC3-45D4-91E9-2EC50F451E81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CandPCI_1_UI", "CandPCI_1_UI\CandPCI_1_UI.csproj", "{5847A923-8226-4446-9019-8B3CD1B394F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5E7686E5-BBC3-45D4-91E9-2EC50F451E81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E7686E5-BBC3-45D4-91E9-2EC50F451E81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E7686E5-BBC3-45D4-91E9-2EC50F451E81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5847A923-8226-4446-9019-8B3CD1B394F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5847A923-8226-4446-9019-8B3CD1B394F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5847A923-8226-4446-9019-8B3CD1B394F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5847A923-8226-4446-9019-8B3CD1B394F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

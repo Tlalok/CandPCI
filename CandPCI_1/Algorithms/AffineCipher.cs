@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CandPCI_1.Algorithms
 {
-    class AffineCipher
+    public class AffineCipher
     {
         private char[] alphabet;
 

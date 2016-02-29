@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CandPCI_1.Algorithms
 {
-    class Position : ICloneable
+    public class Position : ICloneable
     {
         public int Row { get; set; }
         public int Column { get; set; }
@@ -25,13 +25,13 @@ namespace CandPCI_1.Algorithms
         }
     }
 
-    class CardanGrilleKey
+    public class CardanGrilleKey
     {
         public Position[] Positions { get; set; }
         public int MatrixOrder { get; set; }
     }
 
-    class CardanGrilleCipher
+    public class CardanGrilleCipher
     {
         public string Encrypt(string message, CardanGrilleKey key)
         {
