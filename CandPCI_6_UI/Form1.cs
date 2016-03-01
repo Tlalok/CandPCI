@@ -28,6 +28,8 @@ namespace CandPCI_6_UI
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
 
+            AddedMessageBox.Text = String.Empty;
+
             picture = BitmapHelper.LoadBitmap(openFileDialog.FileName);
             pictureBox.Image = picture;
 
