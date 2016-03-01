@@ -16,6 +16,7 @@ namespace CandPCI_6_UI
     public partial class Form1 : Form
     {
         private Bitmap picture;
+        private const int usingBits = 1;
 
         private long prefix = 0x4BD94CD8BC3AA920;
         public Form1()
@@ -29,11 +30,12 @@ namespace CandPCI_6_UI
                 return;
 
             AddedMessageBox.Text = String.Empty;
+            AddingMessageBox.Text = String.Empty;
 
             picture = BitmapHelper.LoadBitmap(openFileDialog.FileName);
             pictureBox.Image = picture;
 
-            var lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), 1);
+            var lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), usingBits);
             var readPrefix = lsb.ReadLongInt();
             if (readPrefix != prefix)
             {
@@ -51,7 +53,7 @@ namespace CandPCI_6_UI
                 return;
             var bytes = BitmapHelper.BitmapToByteRgbMarshal(picture);
 
-            var lsb = new LsbMethod(bytes, 1);
+            var lsb = new LsbMethod(bytes, usingBits);
             lsb.WriteLongInt(prefix);
             lsb.WriteInt(AddingMessageBox.Text.Length * 2);
             lsb.WriteString(AddingMessageBox.Text);
@@ -59,7 +61,7 @@ namespace CandPCI_6_UI
             BitmapHelper.ByteToBitmapRgbMarshal(picture, lsb.Data);
             pictureBox.Image = picture;
 
-            lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), 1);
+            lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), usingBits);
             var readPrefix = lsb.ReadLongInt();
             if (readPrefix != prefix)
             {
