@@ -81,7 +81,7 @@ namespace CandPCI_6_UI
             //}
             //pictureBox.Image.Save(saveFileDialog.FileName, ImageFormat.Bmp);
             var lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), 1);
-            picture = new Bitmap(pictureBox.Image);
+            //picture = new Bitmap(pictureBox.Image);
             var readPrefix = lsb.ReadLongInt();
             picture.Save(saveFileDialog.FileName, ImageFormat.Png);
         }

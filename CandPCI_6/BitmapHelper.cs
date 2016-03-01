@@ -158,10 +158,19 @@ namespace CandPCI_6
         /// <returns>Экземпляр Bitmap.</returns>
         public static Bitmap LoadBitmap(string fileName)
         {
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                return new Bitmap(fs);
-            }
+            //using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            //{
+            //    return new Bitmap(fs);
+            //}
+
+            var firstBmp = new Bitmap(fileName);
+            var secondBmp = new Bitmap(firstBmp.Width, firstBmp.Height, firstBmp.PixelFormat);
+            var gr = Graphics.FromImage(secondBmp);
+            gr.DrawImage(firstBmp, 0, 0);
+            gr.Dispose();
+            firstBmp.Dispose();
+            return secondBmp;
+  
         }
     }
 }
