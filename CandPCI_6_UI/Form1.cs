@@ -29,13 +29,15 @@ namespace CandPCI_6_UI
                 return;
 
             picture = BitmapHelper.LoadBitmap(openFileDialog.FileName);
-            //picture = new Bitmap(openFileDialog.FileName);
             pictureBox.Image = picture;
 
             var lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), 1);
             var readPrefix = lsb.ReadLongInt();
             if (readPrefix != prefix)
+            {
+                MessageBox.Show("Added message not found.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
+            }
             var readLengthMessage = lsb.ReadInt();
             var readMessage = lsb.ReadMessage(readLengthMessage);
             AddedMessageBox.Text = readMessage;
@@ -62,7 +64,7 @@ namespace CandPCI_6_UI
             var readPrefix = lsb.ReadLongInt();
             var readLengthMessage = lsb.ReadInt();
             var readMessage = lsb.ReadMessage(readLengthMessage);
-            MessageBox.Show((readPrefix == prefix).ToString());
+            //MessageBox.Show((readPrefix == prefix).ToString());
             AddedMessageBox.Text = readMessage;
         }
 
@@ -71,15 +73,6 @@ namespace CandPCI_6_UI
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
 
-            //using (var m = new MemoryStream())
-            //{
-            //    picture.Save(m, ImageFormat.Jpeg);
-
-            //    var img = Image.FromStream(m);
-
-            //    img.Save(saveFileDialog.FileName);
-            //}
-            //pictureBox.Image.Save(saveFileDialog.FileName, ImageFormat.Bmp);
             var lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), 1);
             picture = new Bitmap(pictureBox.Image);
             var readPrefix = lsb.ReadLongInt();
