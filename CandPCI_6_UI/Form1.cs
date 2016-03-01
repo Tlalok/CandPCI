@@ -29,7 +29,6 @@ namespace CandPCI_6_UI
                 return;
 
             picture = BitmapHelper.LoadBitmap(openFileDialog.FileName);
-            //picture = new Bitmap(openFileDialog.FileName);
             pictureBox.Image = picture;
 
             var lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), 1);
@@ -52,17 +51,18 @@ namespace CandPCI_6_UI
             lsb.WriteInt(AddingMessageBox.Text.Length * 2);
             lsb.WriteString(AddingMessageBox.Text);
 
-            //var mask = 256 - 1 - 2;
-            //for (var i = 0; i < bytes.Length; i++)
-            //    bytes[i] = (byte)(bytes[i] & mask);
             BitmapHelper.ByteToBitmapRgbMarshal(picture, lsb.Data);
             pictureBox.Image = picture;
 
             lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), 1);
             var readPrefix = lsb.ReadLongInt();
+            if (readPrefix != prefix)
+            {
+                MessageBox.Show("Error occured while adding message.", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
             var readLengthMessage = lsb.ReadInt();
             var readMessage = lsb.ReadMessage(readLengthMessage);
-            MessageBox.Show((readPrefix == prefix).ToString());
             AddedMessageBox.Text = readMessage;
         }
 
@@ -70,19 +70,6 @@ namespace CandPCI_6_UI
         {
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
-
-            //using (var m = new MemoryStream())
-            //{
-            //    picture.Save(m, ImageFormat.Jpeg);
-
-            //    var img = Image.FromStream(m);
-
-            //    img.Save(saveFileDialog.FileName);
-            //}
-            //pictureBox.Image.Save(saveFileDialog.FileName, ImageFormat.Bmp);
-            var lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), 1);
-            //picture = new Bitmap(pictureBox.Image);
-            var readPrefix = lsb.ReadLongInt();
             picture.Save(saveFileDialog.FileName, ImageFormat.Png);
         }
     }
