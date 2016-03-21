@@ -21,17 +21,17 @@ namespace CandPCI_Concole_UI
             var encryptedFile = @"C:\Users\Vladislav_Samodin\Downloads\(1) The Hunger Games111.txt";
             var decryptedFile = @"C:\Users\Vladislav_Samodin\Downloads\(1) The Hunger Games222.txt";
 
-            //TestFile(sourceFile, encryptedFile, decryptedFile);
+            TestFile(sourceFile, encryptedFile, decryptedFile);
 
-            RabinCryptosystem rabin = new RabinCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
-            BinaryFormatter bf = new BinaryFormatter();
+            //RabinCryptosystem rabin = new RabinCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
+            //BinaryFormatter bf = new BinaryFormatter();
 
-            var privateKey = (PrivateKey)bf.Deserialize(File.OpenRead(sourceFile + ".private"));
-            var publicKey = (PublicKey)bf.Deserialize(File.OpenRead(sourceFile + ".public"));
-            var encrypted = File.ReadAllBytes(encryptedFile);
-            var decrypted = rabin.Decrypt(encrypted, privateKey, publicKey);
+            //var privateKey = (PrivateKey)bf.Deserialize(File.OpenRead(sourceFile + ".private"));
+            //var publicKey = (PublicKey)bf.Deserialize(File.OpenRead(sourceFile + ".public"));
+            //var encrypted = File.ReadAllBytes(encryptedFile);
+            //var decrypted = rabin.Decrypt(encrypted, privateKey, publicKey);
 
-            File.WriteAllBytes(decryptedFile, decrypted);
+            //File.WriteAllBytes(decryptedFile, decrypted);
 
             Console.ReadKey();
         }
