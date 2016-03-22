@@ -109,7 +109,7 @@
             // saveFileDialog
             // 
             this.saveFileDialog.DefaultExt = "png";
-            this.saveFileDialog.Filter = "Images|*.png";
+            this.saveFileDialog.Filter = "Images|*.bmp";
             // 
             // label1
             // 

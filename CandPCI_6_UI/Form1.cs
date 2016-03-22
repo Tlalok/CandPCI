@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CandPCI_6;
 using System.IO;
+using System.Numerics;
 
 namespace CandPCI_6_UI
 {
@@ -37,6 +38,7 @@ namespace CandPCI_6_UI
 
             var lsb = new LsbMethod(BitmapHelper.BitmapToByteRgbMarshal(picture), usingBits);
             var readPrefix = lsb.ReadLongInt();
+            BitmapHelper.ByteToBitmapRgbMarshal(picture, lsb.Data);
             if (readPrefix != prefix)
             {
                 MessageBox.Show("Added message not found.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -68,7 +70,7 @@ namespace CandPCI_6_UI
                 MessageBox.Show("Error occured while adding message.", "Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 return;
-            }
+            } 
             var readLengthMessage = lsb.ReadInt();
             var readMessage = lsb.ReadMessage(readLengthMessage);
             AddedMessageBox.Text = readMessage;
@@ -78,7 +80,7 @@ namespace CandPCI_6_UI
         {
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
-            picture.Save(saveFileDialog.FileName, ImageFormat.Png);
+            picture.Save(saveFileDialog.FileName, ImageFormat.Bmp);
         }
     }
 }
