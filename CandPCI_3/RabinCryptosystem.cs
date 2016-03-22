@@ -11,8 +11,8 @@ namespace CandPCI_3
 {
     public class RabinCryptosystem
     {
-        //private readonly byte[] preffix = new byte[] { 0x8D, 0x21, 0xDF, 0xEC};
-        private readonly byte[] preffix = new byte[] { 0x8D };
+        private readonly byte[] preffix = new byte[] { 0x8D, 0x21, 0xDF, 0xEC};
+        //private readonly byte[] preffix = new byte[] { 0x8D };
 
         private IPrimeNumberGenerator generator;
 
@@ -150,15 +150,19 @@ namespace CandPCI_3
 
         public PrivateKey GeneratePrivateKey()
         {
-            var lowerBound = BigInteger.Pow(10, 98);
-            var upperBound = BigInteger.Pow(10, 100);
+            //var lowerBound = BigInteger.Pow(10, 98);
+            //var upperBound = BigInteger.Pow(10, 100);
 
             //var lowerBound = BigInteger.Pow(10, 295);
             //var upperBound = BigInteger.Pow(10, 300);
 
-            var p = generator.GetPrimeNumber(lowerBound, upperBound, n => n % 4 == 3);
+            //var p = generator.GetPrimeNumber(lowerBound, upperBound, n => n % 4 == 3);
+            //var p = generator.GetPrimeNumber(333, 340, n => n % 4 == 3);
+            var p = generator.GetPrimeNumber(42, 43, n => n % 4 == 3);
 
-            var q = generator.GetPrimeNumber(lowerBound, upperBound, n => n % 4 == 3 && n != p);
+            //var q = generator.GetPrimeNumber(lowerBound, upperBound, n => n % 4 == 3 && n != p);
+            //var q = generator.GetPrimeNumber(333, 340, n => n % 4 == 3 && n != p);
+            var q = generator.GetPrimeNumber(42, 43, n => n % 4 == 3 && n != p);
 
             return new PrivateKey
             {

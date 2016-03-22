@@ -17,9 +17,9 @@ namespace CandPCI_Concole_UI
     {
         static void Main(string[] args)
         {
-            var sourceFile = @"C:\Users\Vladislav_Samodin\Downloads\(1) The Hunger Games.txt";
-            var encryptedFile = @"C:\Users\Vladislav_Samodin\Downloads\(1) The Hunger Games111.txt";
-            var decryptedFile = @"C:\Users\Vladislav_Samodin\Downloads\(1) The Hunger Games222.txt";
+            var sourceFile = @"D:\Lab_3_Txt\text.txt";
+            var encryptedFile = @"D:\Lab_3_Txt\text_encrypted.txt";
+            var decryptedFile = @"D:\Lab_3_Txt\text_decrypted.txt";
 
             TestFile(sourceFile, encryptedFile, decryptedFile);
 
@@ -33,6 +33,7 @@ namespace CandPCI_Concole_UI
 
             //File.WriteAllBytes(decryptedFile, decrypted);
 
+            Console.WriteLine("Press any key...");
             Console.ReadKey();
         }
 

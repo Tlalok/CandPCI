@@ -27,9 +27,12 @@ namespace CandPCI_3.PrimalityTesters
                 s++;
             }
 
+            var upperBoundLength = number.ToByteArray().Length - 1;
             for (int i = 0; i < certainty; i++)
             {
-                var a = BigIntegerHelper.PositiveOddRandom(2, number - 2);
+                //var a = BigIntegerHelper.PositiveOddRandom(2, number - 2);
+                //var a = BigIntegerHelper.PositiveOddRandom(1, number.ToByteArray().Length * 8 - 2);
+                var a = BigIntegerHelper.PositiveOddRandom(1, upperBoundLength);
 
                 BigInteger x = BigInteger.ModPow(a, d, number);
                 if (x == 1 || x == number - 1)

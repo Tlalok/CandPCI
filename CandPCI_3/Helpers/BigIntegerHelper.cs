@@ -25,6 +25,39 @@ namespace CandPCI_3.Helpers
             return result;
         }
 
+        //public static BigInteger PositiveOddRandom(int lowerBoundExp, int upperBoundExp)
+        //{
+        //    var random = new Random(DateTime.Now.Millisecond);
+        //    byte[] minorPart = BigInteger.Pow(2, lowerBoundExp).ToByteArray();
+        //    random.NextBytes(minorPart);
+        //    minorPart[0] = (byte)(minorPart[0] | 1);
+        //    byte[] majorPart = BigInteger.Pow(2, upperBoundExp - lowerBoundExp).ToByteArray();
+        //    do
+        //    {
+        //        random.NextBytes(majorPart);
+        //        majorPart[majorPart.Length - 1] &= (byte)0x7F;
+        //        //var result = new BigInteger(majorPart);
+        //    } while (majorPart.All(b => b == 0));
+
+        //    return new BigInteger(minorPart.Concat(majorPart).ToArray());
+        //}
+
+        public static BigInteger PositiveOddRandom(int lowerBoundExp, int upperBoundExp)
+        {
+            var random = new Random(DateTime.Now.Millisecond);
+            byte[] minorPart = new byte[lowerBoundExp];
+            random.NextBytes(minorPart);
+            minorPart[0] = (byte)(minorPart[0] | 1);
+            byte[] majorPart = new byte[upperBoundExp - lowerBoundExp];
+            do
+            {
+                random.NextBytes(majorPart);
+                majorPart[majorPart.Length - 1] &= (byte)0x7F;
+            } while (majorPart.All(b => b == 0));
+
+            return new BigInteger(minorPart.Concat(majorPart).ToArray());
+        }
+
         public static BigInteger fast_exp(BigInteger a, BigInteger z, BigInteger n)
         {
             var a1 = a;
