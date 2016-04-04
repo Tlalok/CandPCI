@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CandPCI_3", "CandPCI_3\Cand
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CandPCI_3_Concole_UI", "CandPCI_Concole_UI\CandPCI_3_Concole_UI.csproj", "{323D006E-3DA5-4FA2-AA01-63A8DA54FF6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CandPCI_4", "CandPCI_4\CandPCI_4.csproj", "{3D4E8402-CB17-4017-A57E-7E53EC285C43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{323D006E-3DA5-4FA2-AA01-63A8DA54FF6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{323D006E-3DA5-4FA2-AA01-63A8DA54FF6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{323D006E-3DA5-4FA2-AA01-63A8DA54FF6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D4E8402-CB17-4017-A57E-7E53EC285C43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D4E8402-CB17-4017-A57E-7E53EC285C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D4E8402-CB17-4017-A57E-7E53EC285C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D4E8402-CB17-4017-A57E-7E53EC285C43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,6 +21,8 @@ namespace CandPCI_Concole_UI
             var encryptedFile = @"D:\Lab_3_Txt\text_encrypted.txt";
             var decryptedFile = @"D:\Lab_3_Txt\text_decrypted.txt";
 
+            //TestMessage();
+
             TestFile(sourceFile, encryptedFile, decryptedFile);
 
             //RabinCryptosystem rabin = new RabinCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));

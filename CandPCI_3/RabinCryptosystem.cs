@@ -101,6 +101,7 @@ namespace CandPCI_3
             return decryptedMessage;
         }
 
+        // Убрать в хелпер
         private void ExtendedEuclid(BigInteger a, BigInteger b, out BigInteger x, out BigInteger y, out BigInteger d)
         {
             BigInteger q, r, x1, x2, y1, y2;
