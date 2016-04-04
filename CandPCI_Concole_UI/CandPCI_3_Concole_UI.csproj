@@ -53,6 +53,10 @@
       <Project>{8890ee4b-5d33-4c93-bc46-c1d9ec03c992}</Project>
       <Name>CandPCI_3</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CandPCI_4\CandPCI_4.csproj">
+      <Project>{3d4e8402-cb17-4017-a57e-7e53ec285c43}</Project>
+      <Name>CandPCI_4</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -40,6 +40,17 @@ namespace CandPCI_3.PrimeNumberGenerators
             return result;
         }
 
+        public BigInteger GetPrimeNumber(int lowerBoundExp, int upperBoundExp)
+        {
+            BigInteger result;
+            do
+            {
+                result = BigIntegerHelper.PositiveOddRandom(lowerBoundExp, upperBoundExp);
+            }
+            while (!tester.IsPrime(result));
+            return result;
+        }
+
         public BigInteger GetPrimeNumber(int lowerBoundExp, int upperBoundExp, Func<BigInteger, bool> predicate)
         {
             BigInteger result;

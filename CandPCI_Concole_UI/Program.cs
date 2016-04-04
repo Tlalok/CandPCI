@@ -10,6 +10,10 @@ using System.Numerics;
 using System.IO;
 using System.Diagnostics;
 using System.Runtime.Serialization.Formatters.Binary;
+using CandPCI_4;
+using CandPCI_4.RSA;
+using PrivateKey = CandPCI_3.PrivateKey;
+using PublicKey = CandPCI_3.PublicKey;
 
 namespace CandPCI_Concole_UI
 {
@@ -23,7 +27,8 @@ namespace CandPCI_Concole_UI
 
             //TestMessage();
 
-            TestFile(sourceFile, encryptedFile, decryptedFile);
+            //TestFile(sourceFile, encryptedFile, decryptedFile);
+            TestFileRsa(sourceFile, encryptedFile, decryptedFile);
 
             //RabinCryptosystem rabin = new RabinCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
             //BinaryFormatter bf = new BinaryFormatter();
@@ -37,6 +42,37 @@ namespace CandPCI_Concole_UI
 
             Console.WriteLine("Press any key...");
             Console.ReadKey();
+        }
+
+        private static void TestFileRsa(string sourceFile, string encryptedFile, string decryptedFile)
+        {
+            RsaCryptosystem rsa = new RsaCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
+            Stopwatch watch = new Stopwatch();
+            var message = File.ReadAllBytes(sourceFile);
+
+            watch.Start();
+            var keys = rsa.GenerateKeys();
+            BinaryFormatter bf = new BinaryFormatter();
+            bf.Serialize(File.OpenWrite(sourceFile + ".private"), keys.privateKey);
+            bf.Serialize(File.OpenWrite(sourceFile + ".public"), keys.publicKey);
+            watch.Stop();
+            Console.WriteLine("Keys generation time = {0}", watch.ElapsedMilliseconds);
+
+            watch.Reset();
+            watch.Start();
+            var encrypted = rsa.Encrypt(message, keys.publicKey);
+            watch.Stop();
+            File.WriteAllBytes(encryptedFile, encrypted);
+            Console.WriteLine("Encryption time = {0}", watch.ElapsedMilliseconds);
+            encrypted = File.ReadAllBytes(encryptedFile);
+
+            watch.Reset();
+            watch.Start();
+            var decrypted = rsa.Decrypt(encrypted, keys.privateKey);
+            watch.Stop();
+            Console.WriteLine("Decryption time = {0}", watch.ElapsedMilliseconds);
+
+            File.WriteAllBytes(decryptedFile, decrypted);
         }
 
         private static void TestFile(string sourceFile, string encryptedFile, string decryptedFile)

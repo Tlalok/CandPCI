@@ -48,6 +48,11 @@ namespace CandPCI_3.Helpers
             byte[] minorPart = new byte[lowerBoundExp];
             random.NextBytes(minorPart);
             minorPart[0] = (byte)(minorPart[0] | 1);
+            if (upperBoundExp == lowerBoundExp)
+            {
+                minorPart[minorPart.Length - 1] &= (byte)0x7F;
+                return new BigInteger(minorPart);
+            }
             byte[] majorPart = new byte[upperBoundExp - lowerBoundExp];
             do
             {
@@ -82,6 +87,11 @@ namespace CandPCI_3.Helpers
             ExtendedEuclid(number, mod, out x, out y, out d);
             if (d == 1)
             {
+                while (x < 0)
+                {
+                    //x += number;
+                    x += mod;
+                }
                 return x;
             }
             return 0;

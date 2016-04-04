@@ -13,6 +13,8 @@ namespace CandPCI_3.PrimeNumberGenerators
 
         BigInteger GetPrimeNumber(BigInteger lowerBound, BigInteger upperBound, Func<BigInteger, bool> predicate);
 
+        BigInteger GetPrimeNumber(int lowerBoundExp, int upperBoundExp);
+
         BigInteger GetPrimeNumber(int lowerBoundExp, int upperBoundExp, Func<BigInteger, bool> predicate);
     }
 }
