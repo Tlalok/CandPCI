@@ -1,47 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace CandPCI_4.RSA
 {
     [Serializable]
-    public class PrivateKey
+    public class PrivateComponents
     {
         [XmlIgnore]
-        public BigInteger r { get; set; }
+        public BigInteger p { get; set; }
         [XmlIgnore]
-        public BigInteger d { get; set; }
+        public BigInteger q { get; set; }
 
-        [XmlElement("r")]
+        [XmlElement("p")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public string rProxy
+        public string pProxy
         {
             get
             {
-                return r.ToString();
+                return p.ToString();
             }
             set
             {
-                r = BigInteger.Parse(value);
+                p = BigInteger.Parse(value);
             }
         }
 
-        [XmlElement("d")]
+        [XmlElement("q")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public string dProxy
+        public string qProxy
         {
             get
             {
-                return d.ToString();
+                return q.ToString();
             }
             set
             {
-                d = BigInteger.Parse(value);
+                q = BigInteger.Parse(value);
             }
         }
     }

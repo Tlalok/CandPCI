@@ -15,7 +15,7 @@ namespace CandPCI_4.RSA
 
         [XmlElement("r")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public string pProxy
+        public string rProxy
         {
             get
             {
@@ -29,7 +29,7 @@ namespace CandPCI_4.RSA
 
         [XmlElement("e")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public string qProxy
+        public string eProxy
         {
             get
             {

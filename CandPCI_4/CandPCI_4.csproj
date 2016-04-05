@@ -40,6 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DigitalSingature\DigitalSignature.cs" />
+    <Compile Include="Hasher.cs" />
+    <Compile Include="IHasher.cs" />
+    <Compile Include="RSA\PrivateComponents.cs" />
     <Compile Include="RSA\PrivateKey.cs" />
     <Compile Include="RSA\PublicKey.cs" />
     <Compile Include="RSA\RsaCryptosystem.cs" />

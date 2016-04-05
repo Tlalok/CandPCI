@@ -18,18 +18,29 @@ namespace CandPCI_4.RSA
             this.generator = generator;
         }
 
-        public PrivateKey GeneratePrivateKey()
+        private PrivateComponents GeneratePrivateComponents()
         {
             var p = generator.GetPrimeNumber(keyLength, keyLength);
             var q = generator.GetPrimeNumber(keyLength, keyLength, n => n != p);
-            return new PrivateKey
+            return new PrivateComponents
             {
                 p = p,
                 q = q
             };
         }
 
-        public PublicKey GeneratePublicKey(PrivateKey key)
+        private PrivateKey GeneratePrivateKey(PrivateComponents privateComponents, PublicKey publicKey)
+        {
+            var phi = (privateComponents.q - 1) * (privateComponents.p - 1);
+            var d = BigIntegerHelper.GetInverse(publicKey.e, phi);
+            return new PrivateKey
+            {
+                d = d,
+                r = publicKey.r
+            };
+        }
+
+        private PublicKey GeneratePublicKey(PrivateComponents key)
         {
             var r = key.q * key.p;
             var phi = (key.q - 1) * (key.p - 1);
@@ -44,11 +55,14 @@ namespace CandPCI_4.RSA
 
         public RsaKeyContainer GenerateKeys()
         {
-            var privateKey = GeneratePrivateKey();
+            var privateComponents = GeneratePrivateComponents();
+            var publicKey = GeneratePublicKey(privateComponents);
+            var privatekey = GeneratePrivateKey(privateComponents, publicKey);
             return new RsaKeyContainer
             {
-                privateKey = privateKey,
-                publicKey = GeneratePublicKey(privateKey)
+                privateComponents = privateComponents,
+                privateKey = privatekey,
+                publicKey = publicKey
             };
         }
 
@@ -82,12 +96,52 @@ namespace CandPCI_4.RSA
             return result;
         }
 
-        public byte[] Decrypt(byte[] message, PrivateKey privateKey, PublicKey publicKey)
+        public byte[] Decrypt(byte[] message, PrivateComponents privateComponents, PublicKey publicKey)
         {
-            var phi = (privateKey.q - 1) * (privateKey.p - 1);
+            var phi = (privateComponents.q - 1) * (privateComponents.p - 1);
             var d = BigIntegerHelper.GetInverse(publicKey.e, phi);
 
-            var keySize = publicKey.r.ToByteArray().Length;
+            return Decrypt(message, new PrivateKey { d = d, r = publicKey.r });
+
+            //var keySize = publicKey.r.ToByteArray().Length;
+            //var encryptedBlockSize = keySize;
+            //var sourceBlockSize = keySize - 2;
+
+            //var numberBlocks = message.Length / encryptedBlockSize;
+            //if (message.Length % encryptedBlockSize != 0)
+            //    throw new ArgumentException("Wrong size of encrypted message");
+
+            //var decryptedMessage = new byte[numberBlocks * sourceBlockSize];
+
+            //Parallel.For(0, numberBlocks - 1, (i) =>
+            ////for (var i = 0; i < numberBlocks; i++)
+            //{
+            //    var part = new byte[encryptedBlockSize];
+
+            //    Array.Copy(message, i * encryptedBlockSize, part, 0, encryptedBlockSize);
+            //    var Mi = new BigInteger(part);
+            //    var mi = BigInteger.ModPow(Mi, d, publicKey.r);
+            //    Array.Copy(mi.ToByteArray(), 0, decryptedMessage, i * sourceBlockSize, sourceBlockSize);
+            //});
+
+            //var lastPart = new byte[encryptedBlockSize];
+            //Array.Copy(message, (numberBlocks - 1) * encryptedBlockSize, lastPart, 0, encryptedBlockSize);
+            //var lMi = new BigInteger(lastPart);
+            //var lmi = BigInteger.ModPow(lMi, d, publicKey.r);
+            //var lmiBytes = lmi.ToByteArray();
+            //var countBytes = lmiBytes.Length;
+            //Array.Copy(lmi.ToByteArray(), 0, decryptedMessage, (numberBlocks - 1) * sourceBlockSize, countBytes);
+
+            //var realSize = sourceBlockSize * (numberBlocks - 1) + countBytes;
+            //var trimMessage = new byte[realSize];
+            //Array.Copy(decryptedMessage, 0, trimMessage, 0, realSize);
+
+            //return trimMessage;
+        }
+
+        public byte[] Decrypt(byte[] message, PrivateKey key)
+        {
+            var keySize = key.r.ToByteArray().Length;
             var encryptedBlockSize = keySize;
             var sourceBlockSize = keySize - 2;
 
@@ -104,14 +158,14 @@ namespace CandPCI_4.RSA
 
                 Array.Copy(message, i * encryptedBlockSize, part, 0, encryptedBlockSize);
                 var Mi = new BigInteger(part);
-                var mi = BigInteger.ModPow(Mi, d, publicKey.r);
+                var mi = BigInteger.ModPow(Mi, key.d, key.r);
                 Array.Copy(mi.ToByteArray(), 0, decryptedMessage, i * sourceBlockSize, sourceBlockSize);
             });
 
             var lastPart = new byte[encryptedBlockSize];
             Array.Copy(message, (numberBlocks - 1) * encryptedBlockSize, lastPart, 0, encryptedBlockSize);
             var lMi = new BigInteger(lastPart);
-            var lmi = BigInteger.ModPow(lMi, d, publicKey.r);
+            var lmi = BigInteger.ModPow(lMi, key.d, key.r);
             var lmiBytes = lmi.ToByteArray();
             var countBytes = lmiBytes.Length;
             Array.Copy(lmi.ToByteArray(), 0, decryptedMessage, (numberBlocks - 1) * sourceBlockSize, countBytes);

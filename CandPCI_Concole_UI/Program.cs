@@ -15,6 +15,7 @@ using CandPCI_4.RSA;
 using PrivateKey = CandPCI_3.PrivateKey;
 using PublicKey = CandPCI_3.PublicKey;
 using System.Xml.Serialization;
+using CandPCI_4.DigitalSingature;
 
 namespace CandPCI_Concole_UI
 {
@@ -26,11 +27,15 @@ namespace CandPCI_Concole_UI
             var encryptedFile = @"D:\Lab_3_Txt\text_encrypted.txt";
             var decryptedFile = @"D:\Lab_3_Txt\text_decrypted.txt";
 
+            var signatureFile = @"D:\Lab_3_Txt\text.txt.signature";
+
             //TestMessage();
 
             //TestFile(sourceFile, encryptedFile, decryptedFile);
             //TestFileRsa(sourceFile, encryptedFile, decryptedFile);
-            TestReadKeysRsa(sourceFile, encryptedFile, decryptedFile);
+            //TestReadKeysRsa(sourceFile, encryptedFile, decryptedFile);
+
+            TestSignature(sourceFile, signatureFile);
 
             //RabinCryptosystem rabin = new RabinCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
             //BinaryFormatter bf = new BinaryFormatter();
@@ -46,9 +51,22 @@ namespace CandPCI_Concole_UI
             Console.ReadKey();
         }
 
+        private static void TestSignature(string sourceFile, string signatureFile)
+        {
+            var rsa = new RsaCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
+            var keys = rsa.GenerateKeys();
+            var file = File.ReadAllBytes(sourceFile);
+            var digitalSignature = new DigitalSignature(new Hasher());
+            File.WriteAllBytes(signatureFile, digitalSignature.Sign(file, keys.publicKey));
+
+            var signature = File.ReadAllBytes(signatureFile);
+            var result = digitalSignature.CheckSign(file, signature, keys.privateKey);
+            Console.WriteLine("check = {0}", result);
+        }
+
         private static void TestReadKeysRsa(string sourceFile, string encryptedFile, string decryptedFile)
         {
-            RsaCryptosystem rsa = new RsaCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
+            var rsa = new RsaCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
             var keys = new RsaKeyContainer();
             var publicKeySerializer = new XmlSerializer(typeof(CandPCI_4.RSA.PublicKey));
             using (var file = File.OpenRead(sourceFile + ".public"))
@@ -56,16 +74,20 @@ namespace CandPCI_Concole_UI
             var privateKeySerializer = new XmlSerializer(typeof(CandPCI_4.RSA.PrivateKey));
             using (var file = File.OpenRead(sourceFile + ".private"))
                 keys.privateKey = (CandPCI_4.RSA.PrivateKey)privateKeySerializer.Deserialize(file);
+            var privateComponentsSerializer = new XmlSerializer(typeof(CandPCI_4.RSA.PrivateComponents));
+            using (var file = File.OpenRead(sourceFile + ".components"))
+                keys.privateComponents = (CandPCI_4.RSA.PrivateComponents)privateComponentsSerializer.Deserialize(file);
 
             var encrypted = File.ReadAllBytes(encryptedFile);
-            var decrypted = rsa.Decrypt(encrypted, keys.privateKey, keys.publicKey);
+            //var decrypted = rsa.Decrypt(encrypted, keys.privateKey, keys.publicKey);
+            var decrypted = rsa.Decrypt(encrypted, keys.privateKey);
 
             File.WriteAllBytes(decryptedFile, decrypted);
         }
 
         private static void TestFileRsa(string sourceFile, string encryptedFile, string decryptedFile)
         {
-            RsaCryptosystem rsa = new RsaCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
+            var rsa = new RsaCryptosystem(new PrimeNumberGenerator(new MillerRabinTest()));
             Stopwatch watch = new Stopwatch();
             var message = File.ReadAllBytes(sourceFile);
 
@@ -77,10 +99,19 @@ namespace CandPCI_Concole_UI
             var privateKeySerializer = new XmlSerializer(typeof(CandPCI_4.RSA.PrivateKey));
             using (var file = File.OpenWrite(sourceFile + ".private"))
                 privateKeySerializer.Serialize(file, keys.privateKey);
+            var privateComponentsSerializer = new XmlSerializer(typeof(CandPCI_4.RSA.PrivateComponents));
+            using (var file = File.OpenWrite(sourceFile + ".components"))
+                privateComponentsSerializer.Serialize(file, keys.privateComponents);
             watch.Stop();
             Console.WriteLine("Keys generation time = {0}", watch.ElapsedMilliseconds);
 
             watch.Reset();
+
+            //var d = keys.privateKey.d;
+            //var e = keys.publicKey.e;
+            //keys.privateKey.d = e;
+            //keys.publicKey.e = d;
+
             watch.Start();
             var encrypted = rsa.Encrypt(message, keys.publicKey);
             watch.Stop();
@@ -90,7 +121,8 @@ namespace CandPCI_Concole_UI
 
             watch.Reset();
             watch.Start();
-            var decrypted = rsa.Decrypt(encrypted, keys.privateKey, keys.publicKey);
+            //var decrypted = rsa.Decrypt(encrypted, keys.privateKey, keys.publicKey);
+            var decrypted = rsa.Decrypt(encrypted, keys.privateKey);
             watch.Stop();
             Console.WriteLine("Decryption time = {0}", watch.ElapsedMilliseconds);
 
