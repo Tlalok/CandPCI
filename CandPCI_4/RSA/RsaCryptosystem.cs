@@ -11,32 +11,44 @@ namespace CandPCI_4.RSA
     {
         private IPrimeNumberGenerator generator;
 
+        public const int keyLength = 32;
+
         public RsaCryptosystem(IPrimeNumberGenerator generator)
         {
             this.generator = generator;
         }
 
+        public PrivateKey GeneratePrivateKey()
+        {
+            var p = generator.GetPrimeNumber(keyLength, keyLength);
+            var q = generator.GetPrimeNumber(keyLength, keyLength, n => n != p);
+            return new PrivateKey
+            {
+                p = p,
+                q = q
+            };
+        }
+
+        public PublicKey GeneratePublicKey(PrivateKey key)
+        {
+            var r = key.q * key.p;
+            var phi = (key.q - 1) * (key.p - 1);
+            var rLength = r.ToByteArray().Length;
+            var e = generator.GetPrimeNumber(rLength - 2, rLength - 2, n => n < phi);
+            return new PublicKey
+            {
+                e = e,
+                r = r
+            };
+        }
+
         public RsaKeyContainer GenerateKeys()
         {
-            var p = generator.GetPrimeNumber(64, 64);
-            var q = generator.GetPrimeNumber(64, 64, n => n != p);
-            var r = q * p;
-            var phi = (q - 1) * (p - 1);
-            var e = generator.GetPrimeNumber(r.ToByteArray().Length - 2, r.ToByteArray().Length - 2, n => n < phi);
-            var d = BigIntegerHelper.GetInverse(e, phi);
-
+            var privateKey = GeneratePrivateKey();
             return new RsaKeyContainer
             {
-                privateKey = new PrivateKey
-                {
-                    r = r,
-                    d = d
-                },
-                publicKey = new PublicKey
-                {
-                    r = r,
-                    e = e
-                }
+                privateKey = privateKey,
+                publicKey = GeneratePublicKey(privateKey)
             };
         }
 
@@ -62,8 +74,6 @@ namespace CandPCI_4.RSA
                 var mi = new BigInteger(part);
                 var Mi = BigInteger.ModPow(mi, key.e, key.r);
                 var MiBytes = Mi.ToByteArray();
-                //while (MiBytes.Length < encryptedBlockSize)
-                //    MiBytes = MiBytes.Concat(new byte[] { 0 }).ToArray();
                 var MiLength = MiBytes.Length;
                 if (MiLength < encryptedBlockSize)
                     MiBytes = MiBytes.Concat(new byte[encryptedBlockSize - MiLength]).ToArray();
@@ -72,9 +82,12 @@ namespace CandPCI_4.RSA
             return result;
         }
 
-        public byte[] Decrypt(byte[] message, PrivateKey key)
+        public byte[] Decrypt(byte[] message, PrivateKey privateKey, PublicKey publicKey)
         {
-            var keySize = key.r.ToByteArray().Length;
+            var phi = (privateKey.q - 1) * (privateKey.p - 1);
+            var d = BigIntegerHelper.GetInverse(publicKey.e, phi);
+
+            var keySize = publicKey.r.ToByteArray().Length;
             var encryptedBlockSize = keySize;
             var sourceBlockSize = keySize - 2;
 
@@ -91,21 +104,19 @@ namespace CandPCI_4.RSA
 
                 Array.Copy(message, i * encryptedBlockSize, part, 0, encryptedBlockSize);
                 var Mi = new BigInteger(part);
-                var mi = BigInteger.ModPow(Mi, key.d, key.r);
-                //var miBytes = mi.ToByteArray();
-                //var
-                //if ()
+                var mi = BigInteger.ModPow(Mi, d, publicKey.r);
                 Array.Copy(mi.ToByteArray(), 0, decryptedMessage, i * sourceBlockSize, sourceBlockSize);
             });
 
             var lastPart = new byte[encryptedBlockSize];
             Array.Copy(message, (numberBlocks - 1) * encryptedBlockSize, lastPart, 0, encryptedBlockSize);
             var lMi = new BigInteger(lastPart);
-            var lmi = BigInteger.ModPow(lMi, key.d, key.r);
+            var lmi = BigInteger.ModPow(lMi, d, publicKey.r);
             var lmiBytes = lmi.ToByteArray();
             var countBytes = lmiBytes.Length;
             Array.Copy(lmi.ToByteArray(), 0, decryptedMessage, (numberBlocks - 1) * sourceBlockSize, countBytes);
-            var realSize = sourceBlockSize*(numberBlocks - 1) + countBytes;
+
+            var realSize = sourceBlockSize * (numberBlocks - 1) + countBytes;
             var trimMessage = new byte[realSize];
             Array.Copy(decryptedMessage, 0, trimMessage, 0, realSize);
 
